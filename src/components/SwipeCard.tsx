@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import TinderCard from "react-tinder-card";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHeart, faTimes } from "@fortawesome/free-solid-svg-icons";
 
 type SwipeCardProps = {
   title: string;
@@ -27,40 +25,65 @@ const SwipeCard: React.FC<SwipeCardProps> = ({ title, onSwipe }) => {
     setTimeout(() => {
       setShowIcon(null); // Réinitialiser l'affichage de l'icône après le swipe
       onSwipe(direction);
-    }, 300);
+    }, 900);
   };
 
   return (
-    <div className="flex justify-center items-center">
-      <TinderCard
-        className="absolute"
-        onSwipe={handleSwipe}
-        onCardLeftScreen={() => setShowIcon(null)} // Réinitialise lorsque la carte disparaît
-        onSwipeRequirementFulfilled={handleSwiping} // Détecte le swipe en temps réel
-        preventSwipe={["up", "down"]} // Empêche le swipe vertical
-        swipeRequirementType="position" // Utilise la position pour le swipe
-        swipeThreshold={100} // Seuil de 100px au lieu de 300px par défaut
-      >
-        {/* Carte affichée */}
-        <div className="bg-white flex items-center justify-center w-60 h-80 sm:w-72 sm:h-96 md:w-80 md:h-100 lg:w-96 lg:h-120 border border-gray-300 rounded-lg shadow-lg p-5 m-4">
-          <h2 className="text-xl sm:text-2xl md:text-3xl text-black font-semibold select-none cursor-default">
-            {title}
-          </h2>
-        </div>
-      </TinderCard>
+      <div>
+        <div className="flex justify-center items-center">
+          <TinderCard
+              className="absolute"
+              onSwipe={handleSwipe}
+              onCardLeftScreen={() => setShowIcon(null)} // Réinitialise lorsque la carte disparaît
+              onSwipeRequirementFulfilled={handleSwiping} // Détecte le swipe en temps réel
+              preventSwipe={["up", "down"]} // Empêche le swipe vertical
+              swipeRequirementType="position" // Utilise la position pour le swipe
+              swipeThreshold={100} // Seuil de 100px au lieu de 300px par défaut
+          >
+            {/* Carte affichée */}
+            <div
+                className="bg-white flex items-center justify-center w-60 h-80 sm:w-72 sm:h-96 md:w-80 md:h-100 lg:w-96 lg:h-120 border border-gray-300 rounded-lg shadow-lg p-5 m-4">
+              <h2 className="text-xl sm:text-2xl md:text-3xl text-black font-semibold select-none cursor-default">
+                {title}
+              </h2>
+            </div>
+          </TinderCard>
 
-      {/* Afficher l'icône de swipe si showIcon est défini */}
-      {showIcon === "right" && (
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-green-500 z-50">
-          <FontAwesomeIcon icon={faHeart} size="3x" />
+          {/* Afficher l'icône de swipe si showIcon est défini */}
+
         </div>
-      )}
-      {showIcon === "left" && (
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-red-500 z-50">
-          <FontAwesomeIcon icon={faTimes} size="3x" />
-        </div>
-      )}
-    </div>
+        {showIcon === "right" && (
+            <div
+                className="pointer-events-none absolute bottom-0 right-0 w-[50vw] h-[100vh] flex justify-center items-start md:items-center from-0% to-100% bg-gradient-to-r from-white/0 to-green-500 animate-fade-in-up transform text-green-500 z-50">
+              <span className="text-9xl animate-bounce mt-[10vh] md:mt-[0vh]" role="img" aria-label="Emoji confetti">🎉</span>
+
+            </div>
+        )}
+        {showIcon === "left" && (
+            <div
+                className="pointer-events-none absolute bottom-0 left-0 w-[50vw] h-[100vh] flex justify-center items-start md:items-center from-0% to-100% bg-gradient-to-l from-white/0 to-red-500 animate-fade-in-up transform text-green-500 z-50">
+              <span className="text-9xl animate-bounce mt-[10vh] md:mt-[0vh]" role="img" aria-label="Emoji caca">💩</span>
+            </div>
+        )}
+        <style jsx global>{`
+          @keyframes fadeInUp {
+            from {
+              opacity: 0;
+            }
+            30% {
+              opacity: 1;
+            }
+            100% {
+              opacity: 0;
+            }
+          }
+
+          .animate-fade-in-up {
+            animation: fadeInUp 0.9s ease-out forwards;
+          }
+        `}</style>
+      </div>
+
   );
 };
 

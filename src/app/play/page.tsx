@@ -6,9 +6,7 @@ import { useRouter } from "next/navigation";
 import { analytics, getRandomQuestions, updateQuestionStats } from "@/lib";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faArrowsAltH,
-  faHeart,
-  faTimes,
+  faArrowsAltH
 } from "@fortawesome/free-solid-svg-icons";
 import { Question } from "@/types";
 import Button from "@/components/Button";
@@ -105,23 +103,19 @@ export default function Play() {
       {/* Icônes de rappel des gestes avec une flèche au centre */}
       <div className="fixed bottom-8 w-full flex justify-between items-center px-12 z-50">
         <div className="flex flex-col items-center">
-          <FontAwesomeIcon icon={faTimes} size="3x" className="text-red-500" />
+          <span className="text-4xl xl:text-7xl" role="img" aria-label="Emoji caca">💩</span>
           <span className="text-white mt-2">Non</span>
         </div>
         <div className="flex flex-col items-center">
           <FontAwesomeIcon
-            icon={faArrowsAltH}
+              icon={faArrowsAltH}
             size="3x"
             className="text-white"
           />
           <span className="text-white mt-2">Swipe</span>
         </div>
         <div className="flex flex-col items-center">
-          <FontAwesomeIcon
-            icon={faHeart}
-            size="3x"
-            className="text-green-500"
-          />
+          <span className="text-4xl xl:text-7xl" role="img" aria-label="Emoji confetti">🎉</span>
           <span className="text-white mt-2">Oui</span>
         </div>
       </div>

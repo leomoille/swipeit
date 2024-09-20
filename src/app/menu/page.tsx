@@ -1,62 +1,58 @@
-// src/app/menu/page.tsx
-"use client";
+'use client'
 
-import { useAuth } from "@/context/authContext";
-import { analytics } from "@/lib/firebase";
-import { logEvent } from "firebase/analytics";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useAuth } from "@/context/authContext"
+import { analytics } from "@/lib/firebase"
+import { logEvent } from "firebase/analytics"
+import { useRouter } from "next/navigation"
+import { useEffect } from "react"
+import { Button } from "@/components/ui/button"
 
 export default function Menu() {
-  const { user, logout } = useAuth();
-  const router = useRouter();
+  const { user, logout } = useAuth()
+  const router = useRouter()
 
   useEffect(() => {
-    // Enregistrer l'événement page_view lorsque la page est chargée
     if (analytics && process.env.NODE_ENV === "production") {
       logEvent(analytics, "page_view", {
         page_title: "Menu",
         page_path: "/menu",
-      });
+      })
     }
-  }, []); // Exécuter une seule fois au chargement de la page
+  }, [])
 
   if (!user) {
-    return <div>Chargement...</div>; // Affichage temporaire pendant la récupération de l'utilisateur
+    return <div className="flex items-center justify-center h-screen">Chargement...</div>
   }
 
-  const goToPlay = () => {
-    router.push("/play"); // Redirection vers la page de jeu
-  };
+  const goToPlay = () => router.push("/play")
 
   return (
-    <div className="w-full h-screen flex flex-col justify-center items-center bg-gradient-to-br from-purple-500 to-indigo-700">
-      <div className="text-center">
-        <h1 className="text-4xl sm:text-5xl font-bold text-white mb-4">
-          Swipe It 👆
-        </h1>
-        <p className="text-lg sm:text-xl text-white mb-8">
-          Prêt à découvrir <b>vos préférences</b> ? <br />
-          Glissez vers <b>la droite si vous aimez</b>, ou vers{" "}
-          <b>la gauche si vous n&apos;aimez pas</b>.
-        </p>
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-purple-500 to-indigo-700 text-white p-4">
+        <div className="text-center mb-8">
+          <h1 className="text-4xl sm:text-5xl font-bold mb-4">Swipe It 👆</h1>
+          <p className="text-lg sm:text-2xl mb-1">
+            Prêt à découvrir <strong>vos préférences</strong> ?
+          </p>
+          <p className="text-sm sm:text-base">
+            Glissez vers <strong>la droite si vous aimez</strong>, ou vers{" "}
+            <strong>la gauche si vous n&apos;aimez pas</strong>.
+          </p>
+        </div>
+
+        <div className="flex flex-col space-y-4">
+          <Button
+              onClick={goToPlay}
+              className="w-60 bg-green-500 hover:bg-green-600 text-xl"
+          >
+            Jouer 🎮
+          </Button>
+          <Button
+              onClick={logout}
+              className="w-60 bg-red-500 hover:bg-red-600 text-xl"
+          >
+            Déconnexion
+          </Button>
+        </div>
       </div>
-
-      {/* Premier item du menu pour jouer */}
-      <button
-        onClick={goToPlay}
-        className="w-60 p-4 bg-green-500 text-white text-xl font-semibold rounded-lg shadow-lg hover:bg-green-600 transition duration-200 mb-6"
-      >
-        Jouer 🎮
-      </button>
-
-      {/* Bouton de déconnexion */}
-      <button
-        onClick={logout}
-        className="mt-6 w-60 p-4 bg-red-500 text-white text-xl font-semibold rounded-lg shadow-lg hover:bg-red-600 transition duration-200"
-      >
-        Déconnexion
-      </button>
-    </div>
-  );
+  )
 }
