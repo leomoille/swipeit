@@ -11,6 +11,7 @@ import {
   where,
 } from "firebase/firestore";
 import { db } from "./firebase";
+import { Question } from "@/types";
 
 // Fonction pour ajouter un champ aléatoire "random" aux questions existantes dans la sous-collection
 export const addRandomFieldToQuestions = async () => {
@@ -38,14 +39,6 @@ export const addRandomFieldToQuestions = async () => {
   });
 };
 
-// Définir le type Question
-type Question = {
-  id: string;
-  title: string;
-  liked: number;
-  disliked: number;
-};
-
 export const getRandomQuestions = async (): Promise<Question[]> => {
   try {
     const randomValue = Math.random();
@@ -65,7 +58,7 @@ export const getRandomQuestions = async (): Promise<Question[]> => {
 
     // Si moins de 10 résultats sont trouvés, effectuer une deuxième requête
     let questions = querySnapshot.docs.map((doc) => {
-      const data = doc.data();
+      const data = doc.data() as Question;
       return {
         id: doc.id,
         title: data.title || "Untitled", // Assurer que le champ 'title' existe
@@ -98,11 +91,16 @@ export const getRandomQuestions = async (): Promise<Question[]> => {
     }
 
     return questions;
-  } catch (error) {
-    console.error(
-      "Erreur lors de la récupération des questions aléatoires :",
-      error
-    );
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error(
+        `Erreur lors de la récupération des questions aléatoires : ${error.message}`
+      );
+    } else {
+      console.error(
+        "Erreur inconnue lors de la récupération des questions aléatoires"
+      );
+    }
     return [];
   }
 };
@@ -118,11 +116,16 @@ export const getQuestionStats = async (questionId: string) => {
       console.log("No such document!");
       return null;
     }
-  } catch (error) {
-    console.error(
-      "Erreur lors de la récupération des stats de la question :",
-      error
-    );
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error(
+        `Erreur lors de la récupération des stats de la question : ${error.message}`
+      );
+    } else {
+      console.error(
+        "Erreur inconnue lors de la récupéraration des stats de la question"
+      );
+    }
     return null;
   }
 };
@@ -130,7 +133,7 @@ export const getQuestionStats = async (questionId: string) => {
 export const updateQuestionStats = async (
   questionId: string,
   type: "like" | "dislike"
-) => {
+): Promise<void> => {
   try {
     const questionRef = doc(
       db,
@@ -141,18 +144,23 @@ export const updateQuestionStats = async (
     );
 
     if (type === "like") {
-      // Incrémente le champ 'liked'
-      await updateDoc(questionRef, {
-        liked: increment(1),
-      });
+      await updateDoc(questionRef, { liked: increment(1) });
     } else if (type === "dislike") {
-      // Incrémente le champ 'disliked'
-      await updateDoc(questionRef, {
-        disliked: increment(1),
-      });
+      await updateDoc(questionRef, { disliked: increment(1) });
     }
-    // console.log(`Statistiques mises à jour pour la question ${questionId}`);
-  } catch (error) {
-    console.error("Erreur lors de la mise à jour des statistiques :", error);
+
+    console.log(
+      `Statistiques mises à jour pour la question ${questionId} : ${type}`
+    );
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error(
+        `Erreur lors de la mise à jour des statistiques pour la question ${questionId} : ${error.message}`
+      );
+    } else {
+      console.error(
+        "Erreur inconnue lors de la mise à jour des statistiques de la question"
+      );
+    }
   }
 };

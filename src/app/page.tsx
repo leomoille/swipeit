@@ -1,5 +1,6 @@
 "use client";
 
+import Button from "@/components/Button";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
@@ -20,12 +21,7 @@ export default function Home() {
           Glissez vers la droite si vous aimez, ou vers la gauche si vous
           n&apos;aimez pas.
         </p>
-        <button
-          onClick={startGame}
-          className="px-6 py-3 bg-blue-500 text-white font-semibold text-lg sm:text-xl rounded-lg shadow-lg hover:bg-blue-600 transition duration-200"
-        >
-          Jouer 👆
-        </button>
+        <Button onClick={startGame} label="Jouer 👆" />
       </div>
     </div>
   );

@@ -4,40 +4,38 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart, faTimes } from "@fortawesome/free-solid-svg-icons";
-import { getQuestionStats } from "@/lib/firebaseFunctions"; // Importe la fonction pour récupérer les stats depuis Firestore
-
-type Choice = {
-  id: string; // Ajoute l'ID pour récupérer les stats
-  title: string;
-};
+import { getQuestionStats } from "@/lib";
+import { Choice, QuestionStats } from "@/types";
+import Button from "./Button";
 
 export default function ResultsContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const [liked, setLiked] = useState<Choice[]>([]);
-  const [disliked, setDisliked] = useState<Choice[]>([]);
+  const [answers, setAnswers] = useState<{
+    liked: Choice[];
+    disliked: Choice[];
+  }>({
+    liked: [],
+    disliked: [],
+  });
   const [likedStats, setLikedStats] = useState<QuestionStats[]>([]); // Stocke les stats de chaque question aimée
   const [dislikedStats, setDislikedStats] = useState<QuestionStats[]>([]); // Stocke les stats de chaque question non aimée
-
-  type QuestionStats = {
-    id: string;
-    liked: number;
-    disliked: number;
-  };
 
   // Fonction pour récupérer les stats depuis Firestore
   const fetchQuestionStats = async (
     questions: Choice[],
     setStats: React.Dispatch<React.SetStateAction<QuestionStats[]>>
   ) => {
-    const statsPromises = questions.map(async (question) => {
-      const stats = await getQuestionStats(question.id); // Récupère les statistiques de la question
-      return {
-        id: question.id,
-        liked: stats?.liked || 0, // Définit à 0 si `liked` n'existe pas
-        disliked: stats?.disliked || 0, // Définit à 0 si `disliked` n'existe pas
-      };
-    });
+    const statsPromises = questions.map(
+      async (question): Promise<QuestionStats> => {
+        const stats = await getQuestionStats(question.id);
+        return {
+          id: question.id,
+          liked: stats?.liked || 0,
+          disliked: stats?.disliked || 0,
+        };
+      }
+    );
 
     const statsData = await Promise.all(statsPromises);
     setStats(statsData);
@@ -50,10 +48,12 @@ export default function ResultsContent() {
     if (liked && disliked) {
       const likedParsed = JSON.parse(liked);
       const dislikedParsed = JSON.parse(disliked);
-      setLiked(likedParsed);
-      setDisliked(dislikedParsed);
 
-      // Récupère les stats des questions aimées et non aimées
+      setAnswers({
+        liked: likedParsed,
+        disliked: dislikedParsed,
+      });
+
       fetchQuestionStats(likedParsed, setLikedStats);
       fetchQuestionStats(dislikedParsed, setDislikedStats);
     }
@@ -71,8 +71,8 @@ export default function ResultsContent() {
         <div>
           <h2 className="text-2xl font-semibold text-center mb-4">💖 Likes</h2>
           <ul className="space-y-4">
-            {liked.length > 0 ? (
-              liked.map((item, index) => (
+            {answers.liked.length > 0 ? (
+              answers.liked.map((item, index) => (
                 <li
                   key={index}
                   className="bg-green-50 text-green-900 rounded-lg px-4 py-3 flex flex-col justify-between items-start transition transform hover:scale-105"
@@ -115,8 +115,8 @@ export default function ResultsContent() {
             💔 Dislikes
           </h2>
           <ul className="space-y-4">
-            {disliked.length > 0 ? (
-              disliked.map((item, index) => (
+            {answers.disliked.length > 0 ? (
+              answers.disliked.map((item, index) => (
                 <li
                   key={index}
                   className="bg-red-50 text-red-900 rounded-lg px-4 py-3 flex flex-col justify-between items-start transition transform hover:scale-105"
@@ -162,12 +162,7 @@ export default function ResultsContent() {
       </p>
 
       {/* Bouton pour rejouer */}
-      <button
-        className="mt-8 px-6 py-3 bg-blue-500 text-white rounded hover:bg-blue-600 transition transform hover:scale-105"
-        onClick={handleReplay}
-      >
-        Rejouer 🔄
-      </button>
+      <Button onClick={handleReplay} label="Rejouer 🔄" />
     </div>
   );
 }

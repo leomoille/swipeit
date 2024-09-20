@@ -3,64 +3,73 @@
 import { useState, useEffect } from "react";
 import SwipeCard from "@/components/SwipeCard";
 import { useRouter } from "next/navigation";
-import {
-  getRandomQuestions,
-  updateQuestionStats,
-} from "@/lib/firebaseFunctions"; // Importe la fonction Firebase
+import { getRandomQuestions, updateQuestionStats } from "@/lib";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowsAltH,
   faHeart,
   faTimes,
 } from "@fortawesome/free-solid-svg-icons";
-
-// Définir le type pour les questions
-type Question = {
-  id: string;
-  title: string;
-  liked: number;
-  disliked: number;
-};
+import { Question } from "@/types";
+import Button from "@/components/Button";
 
 export default function Play() {
   const [currentIndex, setCurrentIndex] = useState(9); // Commence à l'index 9 car on récupère 10 questions
   const [questions, setQuestions] = useState<Question[]>([]); // Spécifie que le tableau contient des objets de type Question
-  const [liked, setLiked] = useState<Question[]>([]); // Même chose pour les likes
-  const [disliked, setDisliked] = useState<Question[]>([]); // Même chose pour les dislikes
+  const [answers, setAnswers] = useState<{
+    liked: Question[];
+    disliked: Question[];
+  }>({
+    liked: [],
+    disliked: [],
+  });
   const router = useRouter();
 
   // Récupérer 10 questions aléatoires depuis Firestore au premier rendu
   useEffect(() => {
     const fetchQuestions = async () => {
-      const fetchedQuestions = await getRandomQuestions();
-
-      setQuestions(fetchedQuestions); // Limite à 10 questions
+      try {
+        const fetchedQuestions = await getRandomQuestions();
+        setQuestions(fetchedQuestions);
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          console.error(
+            `Erreur lors de la récupération des questions : ${error.message}`
+          );
+        } else {
+          console.error(
+            "Erreur inconnue lors de la récupération des questions"
+          );
+        }
+      }
     };
 
     fetchQuestions();
   }, []);
 
-  const handleSwipe = async (direction: string, index: number) => {
+  const handleSwipe = (direction: string, index: number) => {
     const question = questions[index];
 
-    if (direction === "right") {
-      setLiked([...liked, question]);
-      // Met à jour le compteur de likes dans Firestore
-      await updateQuestionStats(question.id, "like");
-    } else if (direction === "left") {
-      setDisliked([...disliked, question]);
-      // Met à jour le compteur de dislikes dans Firestore
-      await updateQuestionStats(question.id, "dislike");
-    }
+    setAnswers((prev) => ({
+      ...prev,
+      liked: direction === "right" ? [...prev.liked, question] : prev.liked,
+      disliked:
+        direction === "left" ? [...prev.disliked, question] : prev.disliked,
+    }));
 
-    setCurrentIndex((prevIndex) => prevIndex - 1); // Passe à la question suivante
+    updateQuestionStats(
+      question.id,
+      direction === "right" ? "like" : "dislike"
+    );
+
+    setCurrentIndex((prevIndex) => prevIndex - 1);
   };
 
   const goToResults = () => {
     router.push(
-      `/results?liked=${JSON.stringify(liked)}&disliked=${JSON.stringify(
-        disliked
-      )}`
+      `/results?liked=${JSON.stringify(
+        answers.liked
+      )}&disliked=${JSON.stringify(answers.disliked)}`
     );
   };
 
@@ -79,15 +88,10 @@ export default function Play() {
         )
       ) : (
         <div className="text-center">
-          <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white">
+          <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold text-white mb-8">
             On regarde ce que ça donne 👀
           </h2>
-          <button
-            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm sm:text-base lg:text-lg"
-            onClick={goToResults}
-          >
-            Voir les résultats 🎉
-          </button>
+          <Button onClick={goToResults} label="Voir les résultats 🎉" />
         </div>
       )}
 

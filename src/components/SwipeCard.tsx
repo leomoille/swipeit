@@ -20,7 +20,9 @@ const SwipeCard: React.FC<SwipeCardProps> = ({ title, onSwipe }) => {
     }
   };
 
-  const handleSwipe = (direction: string) => {
+  type SwipeDirection = "right" | "left" | "up" | "down";
+
+  const handleSwipe = (direction: SwipeDirection) => {
     setShowIcon(direction); // Afficher l'icône pour un bref moment
     setTimeout(() => {
       setShowIcon(null); // Réinitialiser l'affichage de l'icône après le swipe
