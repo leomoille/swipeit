@@ -20,7 +20,7 @@ export default function Signup() {
       router.push("/menu"); // Rediriger vers le menu si déjà connecté
     }
 
-    if (analytics) {
+    if (analytics && process.env.NODE_ENV === "production") {
       logEvent(analytics, "page_view", {
         page_title: "Sign up",
         page_path: "/signup",

@@ -28,7 +28,7 @@ export default function Play() {
 
   // Récupérer 10 questions aléatoires depuis Firestore au premier rendu
   useEffect(() => {
-    if (analytics) {
+    if (analytics && process.env.NODE_ENV === "production") {
       logEvent(analytics, "page_view", {
         page_title: "Play",
         page_path: "/play",

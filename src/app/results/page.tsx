@@ -7,7 +7,7 @@ import { logEvent } from "firebase/analytics";
 
 export default function Results() {
   useEffect(() => {
-    if (analytics) {
+    if (analytics && process.env.NODE_ENV === "production") {
       logEvent(analytics, "page_view", {
         page_title: "Results",
         page_path: "/results",

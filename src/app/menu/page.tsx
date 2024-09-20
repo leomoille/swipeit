@@ -13,7 +13,7 @@ export default function Menu() {
 
   useEffect(() => {
     // Enregistrer l'événement page_view lorsque la page est chargée
-    if (analytics) {
+    if (analytics && process.env.NODE_ENV === "production") {
       logEvent(analytics, "page_view", {
         page_title: "Menu",
         page_path: "/menu",
@@ -37,8 +37,8 @@ export default function Menu() {
         </h1>
         <p className="text-lg sm:text-xl text-white mb-8">
           Prêt à découvrir <b>vos préférences</b> ? <br />
-          Glissez vers <b>la droite si vous aimez</b>, ou vers <b>la gauche si vous
-          n&apos;aimez pas</b>.
+          Glissez vers <b>la droite si vous aimez</b>, ou vers{" "}
+          <b>la gauche si vous n&apos;aimez pas</b>.
         </p>
       </div>
 

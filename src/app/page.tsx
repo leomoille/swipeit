@@ -1,10 +1,23 @@
 "use client";
 
 import Button from "@/components/Button";
+import { analytics } from "@/lib/firebase";
+import { logEvent } from "firebase/analytics";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function Home() {
   const router = useRouter();
+
+  useEffect(() => {
+    // Enregistrer l'événement page_view lorsque la page est chargée
+    if (analytics && process.env.NODE_ENV === "production") {
+      logEvent(analytics, "page_view", {
+        page_title: "Accueil",
+        page_path: "/",
+      });
+    }
+  }, []); // Exécuter une seule fois au chargement de la page
 
   const login = () => {
     router.push("/login");
