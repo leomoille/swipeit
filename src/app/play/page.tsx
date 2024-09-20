@@ -10,7 +10,7 @@ import {
   faHeart,
   faTimes,
 } from "@fortawesome/free-solid-svg-icons";
-import { Question } from "@/types";
+import { Question } from "@/_types";
 import Button from "@/components/Button";
 import { logEvent } from "firebase/analytics";
 

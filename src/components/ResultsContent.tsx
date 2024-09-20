@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHeart, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { getQuestionStats } from "@/lib";
-import { Choice, QuestionStats } from "@/types";
+import { Choice, QuestionStats } from "@/_types";
 import Button from "./Button";
 
 export default function ResultsContent() {

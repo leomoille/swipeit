@@ -11,7 +11,7 @@ import {
   where,
 } from "firebase/firestore";
 import { db } from "./firebase";
-import { Question } from "@/types";
+import { Question } from "@/_types";
 
 // Fonction pour ajouter un champ aléatoire "random" aux questions existantes dans la sous-collection
 export const addRandomFieldToQuestions = async () => {
