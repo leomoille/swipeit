@@ -1,36 +1,71 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Swipe It 👆
 
-## Getting Started
+Une web app simple, dans laquelle on peut jouer à dire si telle ou telle situation est drôle ou pas.
 
-First, run the development server:
+## Installation en local
+
+Pour ça, tu vas forcément avoir besoin de node. Si tu l'as pas, pas possible d'aller plus loin. Désolé 🥹
+
+### Récupérer le projet
+
+Ok, première étape, tu clone le projet ou tu veux sur ta machine.
+
+```bash
+git clone https://github.com/leomoille/swipeit.git
+```
+
+Tu as récupéré les sources ? Top, on passe à la suite.
+
+### Installer les dépendances
+
+Je t'avais dit qu'on avait besoin de node, alors c'est parti.
+
+```bash
+npm install
+```
+
+> Essaie d'être dans le dossier du projet pour lancer la commande, sinon ça sert pas à grand chose.
+
+### Configurer les variables d'environnement
+
+Copie le contenu du fichier `.env` dans un fichier `.env.local`.
+
+Swipe It utilise Firebase (Firestore), Auth et Analytics.
+
+Configure Auth pour permettre la connexion et l'inscription par mail/mot de passe.
+
+Pour Firebase, les questions sont stockées dans :
+
+`swipe-it > questions > questions`
+
+Pour la structure des questions on reste simple :
+
+```JSON
+{
+    "title": String,
+    "liked": Int,
+    "disliked": Int,
+    "random": Float
+}
+```
+
+### Démarer le serveur local
+
+Une fois que tu as tout installé, tu peux lancer le serveur local.
 
 ```bash
 npm run dev
-# or
+# ou
 yarn dev
-# or
+# ou
 pnpm dev
-# or
+# ou
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Après c'est tout indiqué dans ton terminal.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Plus d'infos ?
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [Next.js Documentation](https://nextjs.org/docs) - La documentation de Next.
+- [Learn Next.js](https://nextjs.org/learn) - Si tu as envie d'apprendre des trucs.
