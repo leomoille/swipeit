@@ -1,4 +1,3 @@
-// src/context/authContext.tsx
 "use client";
 
 import {
@@ -12,31 +11,31 @@ import { auth } from "@/lib/firebase";
 import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
-  createUserWithEmailAndPassword, // Import de la fonction d'inscription
+  createUserWithEmailAndPassword,
   signOut,
   User,
   UserCredential,
+  GoogleAuthProvider,
+  signInWithPopup,
 } from "firebase/auth";
 import { usePathname, useRouter } from "next/navigation";
 
-// Typage pour AuthContext
+// Mise à jour du typage pour AuthContext
 interface AuthContextType {
-  user: User | null; // L'utilisateur peut être null si non connecté
-  login: (email: string, password: string) => Promise<UserCredential>; // login retourne une promesse
-  signup: (email: string, password: string) => Promise<UserCredential>; // ajout de signup
+  user: User | null;
+  login: (email: string, password: string) => Promise<UserCredential>;
+  signup: (email: string, password: string) => Promise<UserCredential>;
   logout: () => Promise<void>;
+  loginWithGoogle: () => Promise<UserCredential>; // Nouvelle fonction pour la connexion Google
 }
 
-// Création du contexte avec un type explicite
 const AuthContext = createContext<AuthContextType | null>(null);
 
-// Fournisseur de contexte
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
-  const pathname = usePathname(); // Récupère la route actuelle
+  const pathname = usePathname();
 
-  // Définir les routes publiques accessibles sans être connecté
   const publicRoutes = ["/", "/login", "/signup"];
 
   useEffect(() => {
@@ -45,7 +44,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(user);
       } else {
         setUser(null);
-        // Rediriger seulement si l'utilisateur essaie d'accéder à une route protégée
         if (!publicRoutes.includes(pathname)) {
           router.push("/login");
         }
@@ -55,26 +53,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => unsubscribe();
   }, [router, pathname, publicRoutes]);
 
-  // Fonction de connexion avec typage
   const login = (email: string, password: string): Promise<UserCredential> =>
     signInWithEmailAndPassword(auth, email, password);
 
-  // Fonction d'inscription avec typage
   const signup = (email: string, password: string): Promise<UserCredential> =>
     createUserWithEmailAndPassword(auth, email, password);
 
-  // Fonction de déconnexion avec typage
   const logout = (): Promise<void> =>
     signOut(auth).then(() => router.push("/login"));
 
+  // Nouvelle fonction pour la connexion Google
+  const loginWithGoogle = (): Promise<UserCredential> => {
+    const provider = new GoogleAuthProvider();
+    return signInWithPopup(auth, provider);
+  };
+
   return (
-    <AuthContext.Provider value={{ user, login, signup, logout }}>
+    <AuthContext.Provider
+      value={{ user, login, signup, logout, loginWithGoogle }}
+    >
       {children}
     </AuthContext.Provider>
   );
 }
 
-// Hook pour accéder au contexte
 export const useAuth = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (!context) {

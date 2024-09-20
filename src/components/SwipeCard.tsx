@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import TinderCard from "react-tinder-card";
-import { Heart } from 'lucide-react'
 
 type SwipeCardProps = {
   title: string;

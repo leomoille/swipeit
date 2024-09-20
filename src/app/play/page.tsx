@@ -6,9 +6,7 @@ import { useRouter } from "next/navigation";
 import { analytics, getRandomQuestions, updateQuestionStats } from "@/lib";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faArrowsAltH,
-  faHeart,
-  faTimes,
+  faArrowsAltH
 } from "@fortawesome/free-solid-svg-icons";
 import { Question } from "@/types";
 import Button from "@/components/Button";
