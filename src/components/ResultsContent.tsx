@@ -63,6 +63,10 @@ export default function ResultsContent() {
     router.push("/play"); // Redirige vers la page principale pour rejouer
   };
 
+  const backToMenu = () => {
+    router.push("/menu");
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-500 to-indigo-700 flex flex-col items-center justify-center text-white px-4 py-8">
       <h1 className="text-4xl font-bold mb-8">Résultats</h1>
@@ -161,8 +165,11 @@ export default function ResultsContent() {
         <b>Il y en a une centaine</b>, on recommence ?
       </p>
 
-      {/* Bouton pour rejouer */}
-      <Button onClick={handleReplay} label="Rejouer 🔄" />
+      {/* Boutons pour rejouer et retour au menu */}
+      <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+        <Button onClick={handleReplay} label="Rejouer 🔄" />
+        <Button onClick={backToMenu} label="Retour au menu" />
+      </div>
     </div>
   );
 }

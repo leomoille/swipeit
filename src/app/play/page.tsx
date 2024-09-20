@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import SwipeCard from "@/components/SwipeCard";
 import { useRouter } from "next/navigation";
-import { getRandomQuestions, updateQuestionStats } from "@/lib";
+import { analytics, getRandomQuestions, updateQuestionStats } from "@/lib";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowsAltH,
@@ -12,6 +12,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Question } from "@/types";
 import Button from "@/components/Button";
+import { logEvent } from "firebase/analytics";
 
 export default function Play() {
   const [currentIndex, setCurrentIndex] = useState(9); // Commence à l'index 9 car on récupère 10 questions
@@ -27,6 +28,12 @@ export default function Play() {
 
   // Récupérer 10 questions aléatoires depuis Firestore au premier rendu
   useEffect(() => {
+    if (analytics) {
+      logEvent(analytics, "page_view", {
+        page_title: "Play",
+        page_path: "/play",
+      });
+    }
     const fetchQuestions = async () => {
       try {
         const fetchedQuestions = await getRandomQuestions();

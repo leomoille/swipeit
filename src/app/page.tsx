@@ -6,8 +6,12 @@ import { useRouter } from "next/navigation";
 export default function Home() {
   const router = useRouter();
 
-  const startGame = () => {
-    router.push("/play"); // Redirige vers la page du jeu
+  const login = () => {
+    router.push("/login");
+  };
+
+  const signup = () => {
+    router.push("/signup");
   };
 
   return (
@@ -17,11 +21,12 @@ export default function Home() {
           Bienvenue sur Swipe It !
         </h1>
         <p className="text-lg sm:text-xl text-white mb-8">
-          Prêt à découvrir vos préférences ? <br />
-          Glissez vers la droite si vous aimez, ou vers la gauche si vous
-          n&apos;aimez pas.
+          Prêt à découvrir <b>vos préférences</b> ? <br />
         </p>
-        <Button onClick={startGame} label="Jouer 👆" />
+        <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+          <Button onClick={login} label="Connexion" />
+          <Button onClick={signup} label="Inscription" />
+        </div>
       </div>
     </div>
   );

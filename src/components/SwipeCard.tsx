@@ -43,7 +43,7 @@ const SwipeCard: React.FC<SwipeCardProps> = ({ title, onSwipe }) => {
       >
         {/* Carte affichée */}
         <div className="bg-white flex items-center justify-center w-60 h-80 sm:w-72 sm:h-96 md:w-80 md:h-100 lg:w-96 lg:h-120 border border-gray-300 rounded-lg shadow-lg p-5 m-4">
-          <h2 className="text-xl sm:text-2xl md:text-3xl text-black font-semibold">
+          <h2 className="text-xl sm:text-2xl md:text-3xl text-black font-semibold select-none cursor-default">
             {title}
           </h2>
         </div>
